@@ -24,3 +24,80 @@ CREATE TABLE messages (
     
 
 );
+
+
+
+
+
+DELIMITER //
+
+CREATE FUNCTION get_random_date
+(start_year INT)
+RETURNS DATE
+NOT DETERMINISTIC
+BEGIN
+	DECLARE rand_date DATE;
+    SET rand_date = (SELECT CURDATE() - INTERVAL RAND()*start_year YEAR - INTERVAL RAND()*365 DAY);
+    RETURN rand_date;
+    
+END; //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE FUNCTION get_first_name
+(first_name VARCHAR(25))
+RETURNS VARCHAR(25)
+NOT DETERMINISTIC
+BEGIN
+		SET @max_users = (SELECT COUNT(*) FROM names.firstName);
+        SET first_name =  (SELECT name FROM names.firstname ORDER BY RAND() LIMIT 1);
+		
+        RETURN first_name;
+        
+END; //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE FUNCTION get_last_name
+(last_name VARCHAR(25))
+RETURNS VARCHAR(25)
+NOT DETERMINISTIC
+BEGIN
+		SET @max_users = (SELECT COUNT(*) FROM names.firstName);
+        SET last_name =  (SELECT name FROM names.lastname ORDER BY RAND() LIMIT 1);
+        
+        RETURN last_name;
+
+END; //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE generate_random_accounts
+(IN num_of_accounts INT)
+BEGIN
+	SET @i = 0;
+    
+    WHILE @i <= num_of_accounts DO
+		SET @first_name = get_first_name('');
+        SET @last_name = get_last_name('');
+    
+		INSERT INTO user VALUES
+			(NULL, @first_name, @last_name, CONCAT(@first_name, '.', @last_name, '@cmail.com'), NULL, NULL);
+            
+		SET @i = @i+1;
+    
+    END WHILE;
+
+
+END; //
+
+DELIMITER ;
+
+
+CALL generate_random_accounts(25);
