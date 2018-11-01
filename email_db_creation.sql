@@ -2,6 +2,13 @@ DROP DATABASE IF EXISTS email;
 CREATE DATABASE email;
 USE email;
 
+/*
+TODO:
+ADD two tables to random_names_db ("subject" and "body") and fill it with dummy information 
+[rename random_names_db.sql and rename db to something that makes more sense]
+ADD convenience function to generate sent and recieved emails from different users.
+*/
+
 
 CREATE TABLE user (
 	ID					INT				PRIMARY KEY		AUTO_INCREMENT,
